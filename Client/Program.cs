@@ -6,16 +6,17 @@ class Program
 {
     static async Task Main()
     {
-        Console.Title = "Samples.NHibernate.Client";
-        var endpointConfiguration = new EndpointConfiguration("Samples.NHibernate.Client");
+        Console.Title = "Case00029751.Client";
+        var endpointConfiguration = new EndpointConfiguration("Case00029751.Client");
         endpointConfiguration.EnableInstallers();
-        endpointConfiguration.UsePersistence<NHibernatePersistence>();
         endpointConfiguration.UseTransport<LearningTransport>();
-
+        endpointConfiguration.SendOnly();
         var endpointInstance = await Endpoint.Start(endpointConfiguration)
             .ConfigureAwait(false);
 
-        Console.WriteLine("Press 'enter' to send a StartOrder messages");
+        int repros = 1;
+
+        Console.WriteLine("Press 'enter' to send a StartRepro messages");
         Console.WriteLine("Press any other key to exit");
 
         while (true)
@@ -28,14 +29,26 @@ class Program
                 break;
             }
 
-            var orderId = Guid.NewGuid();
-            var startOrder = new StartOrder
+            var reproId = Guid.NewGuid();
+            var startRepro = new StartRepro
             {
-                OrderId = orderId
+                ReproId = reproId,
             };
-            await endpointInstance.Send("Samples.NHibernate.Server", startOrder)
+
+            for (var i = 0; i < repros; i++)
+            {
+                startRepro.Repros.Add(new ReproTransaction
+                {
+                    Id = Guid.NewGuid(),
+                    ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
+                });
+            }
+
+            await endpointInstance.Send("Case00029751.Server", startRepro)
                 .ConfigureAwait(false);
-            Console.WriteLine($"StartOrder Message sent with OrderId {orderId}");
+            Console.WriteLine($"StartRepro Message sent with ReproId {reproId} and {repros} ReproTransactions");
+
+            repros++;
         }
 
         await endpointInstance.Stop()

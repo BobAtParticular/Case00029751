@@ -1,33 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NHibernate.Cfg;
-using NHibernate.Mapping.ByCode;
+using NHibernate.Linq;
 using NServiceBus;
+using NServiceBus.Logging;
 using NServiceBus.Persistence;
-using Environment = NHibernate.Cfg.Environment;
 
 class Program
 {
     static async Task Main()
     {
-        Console.Title = "Samples.NHibernate.Server";
+        Console.Title = "Case00029751.Server";
 
-        #region Config
-
-        var endpointConfiguration = new EndpointConfiguration("Samples.NHibernate.Server");
+        var endpointConfiguration = new EndpointConfiguration("Case00029751.Server");
         var persistence = endpointConfiguration.UsePersistence<NHibernatePersistence>();
+        persistence.ConnectionString("Data Source=.\\SqlExpress;Database=Case00029751;Integrated Security=True");
 
-        var nhConfig = new Configuration();
-        nhConfig.SetProperty(Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
-        nhConfig.SetProperty(Environment.ConnectionDriver, "NHibernate.Driver.Sql2008ClientDriver");
-        nhConfig.SetProperty(Environment.Dialect, "NHibernate.Dialect.MsSql2008Dialect");
-        nhConfig.SetProperty(Environment.ConnectionStringName, "NServiceBus/Persistence");
-
-        AddMappings(nhConfig);
-
-        persistence.UseConfiguration(nhConfig);
-
-        #endregion
+        LogManager.Use<DefaultFactory>().Level(LogLevel.Debug);
 
         endpointConfiguration.UseTransport<LearningTransport>();
 
@@ -39,12 +28,5 @@ class Program
 
         await endpointInstance.Stop()
             .ConfigureAwait(false);
-    }
-
-    static void AddMappings(Configuration nhConfiguration)
-    {
-        var mapper = new ModelMapper();
-        mapper.AddMappings(typeof (OrderShipped).Assembly.GetTypes());
-        nhConfiguration.AddMapping(mapper.CompileMappingForAllExplicitlyAddedEntities());
     }
 }
