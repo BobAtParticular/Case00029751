@@ -26,10 +26,13 @@ public class ReproSaga :
         }
 
         Data.Repros.Clear();
-        foreach (var rt in message.Repros)
-        {
-            Data.Repros.Add(rt);
-        }
+        //foreach (var rt in message.Repros)
+        //{
+        //    Data.Repros.Add(rt);
+        //}
+
+        Data.Repros.Add(new ReproTransaction());
+        Data.Repros.Add(new ReproTransaction());
 
         log.Info($"Received StartRepro message {Data.ReproId}. Starting Saga");
 

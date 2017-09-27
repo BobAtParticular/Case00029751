@@ -39,23 +39,23 @@ class Program
                 ReproId = reproId,
             };
 
-            var lastRepro = previousReproIds.Select(rid => new StartRepro
-            {
-                ReproId = rid
-            }).LastOrDefault();
+            //var lastRepro = previousReproIds.Select(rid => new StartRepro
+            //{
+            //    ReproId = rid
+            //}).LastOrDefault();
 
-            for (var i = 0; i < repros; i++)
-            {
-                startRepro.Repros.Add(new ReproTransaction
-                {
-                    ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
-                });
+            //for (var i = 0; i < repros; i++)
+            //{
+            //    startRepro.Repros.Add(new ReproTransaction
+            //    {
+            //        ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
+            //    });
 
-                lastRepro?.Repros.Add(new ReproTransaction
-                {
-                    ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
-                });
-            }
+            //    lastRepro?.Repros.Add(new ReproTransaction
+            //    {
+            //        ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
+            //    });
+            //}
 
             await endpointInstance.Send("Case00029751.Server", startRepro)
                 .ConfigureAwait(false);
