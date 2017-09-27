@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NHibernate.Cfg;
-using NHibernate.Linq;
 using NServiceBus;
 using NServiceBus.Logging;
 using NServiceBus.Persistence;
