@@ -48,13 +48,13 @@ class Program
             {
                 startRepro.Repros.Add(new ReproTransaction
                 {
-                    Id = Guid.NewGuid(),
+                    TransactionId = Guid.NewGuid(),
                     ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
                 });
 
                 lastRepro?.Repros.Add(new ReproTransaction
                 {
-                    Id = Guid.NewGuid(),
+                    TransactionId = Guid.NewGuid(),
                     ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
                 });
             }
