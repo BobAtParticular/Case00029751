@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NServiceBus;
 
@@ -15,6 +17,8 @@ class Program
             .ConfigureAwait(false);
 
         int repros = 1;
+
+        var previousReproIds = new List<Guid>();
 
         Console.WriteLine("Press 'enter' to send a StartRepro messages");
         Console.WriteLine("Press any other key to exit");
@@ -35,9 +39,20 @@ class Program
                 ReproId = reproId,
             };
 
+            var lastRepro = previousReproIds.Select(rid => new StartRepro
+            {
+                ReproId = rid
+            }).LastOrDefault();
+
             for (var i = 0; i < repros; i++)
             {
                 startRepro.Repros.Add(new ReproTransaction
+                {
+                    Id = Guid.NewGuid(),
+                    ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
+                });
+
+                lastRepro?.Repros.Add(new ReproTransaction
                 {
                     Id = Guid.NewGuid(),
                     ReproType = repros % 2 == 0 ? ReproType.Type2 : ReproType.Type1
@@ -48,6 +63,7 @@ class Program
                 .ConfigureAwait(false);
             Console.WriteLine($"StartRepro Message sent with ReproId {reproId} and {repros} ReproTransactions");
 
+            previousReproIds.Add(reproId);
             repros++;
         }
 
