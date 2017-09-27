@@ -25,7 +25,7 @@ public class ReproSaga :
             Data.Repros = new List<ReproTransaction>();
         }
 
-        //Data.Repros.Clear();
+        Data.Repros.Clear();
         foreach (var rt in message.Repros)
         {
             Data.Repros.Add(rt);
